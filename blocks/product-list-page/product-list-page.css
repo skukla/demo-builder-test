@@ -79,6 +79,7 @@
     display: flex;
     flex-direction: row;
     gap: var(--spacing-xxsmall);
+    position: relative;
 }
 
 /* Empty State */
@@ -97,30 +98,19 @@
     display: none;
 }
 
-/* Fix stretchy images in product discovery */
-.block.product-list-page img {
-    height: auto !important;
-    aspect-ratio: 1;
-    object-fit: contain;
+.product-discovery-product-actions .requisition-list-names {
+    position: static;
 }
 
-.block.product-list-page picture {
-    display: block;
-    aspect-ratio: 1;
+.product-discovery-product-actions .requisition-list-names .requisition-list-selector__picker {
+    width: var(--spacing-xlarge);
 }
 
-/* Product image wrapper border and hover effects */
-.block.product-list-page .dropin-product-item-card__image {
-    border: 1px solid var(--color-neutral-300);
-    border-radius: var(--shape-border-radius-2);
-    padding: var(--spacing-xsmall);
-    transition: border-color 120ms ease, box-shadow 120ms ease;
-}
-
-.block.product-list-page .dropin-product-item-card__image:hover,
-.block.product-list-page .dropin-product-item-card__image:focus-within {
-    border-color: var(--color-brand-500);
-    box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-brand-500) 20%, transparent);
+.product-discovery-product-actions .requisition-list-names .dropin-card {
+    left: 0;
+    position: absolute;
+    width: 100%;
+    z-index: 2;
 }
 
 /* Media Queries */

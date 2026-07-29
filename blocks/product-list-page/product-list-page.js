@@ -29,7 +29,8 @@ export default async function decorate(block) {
   const config = readBlockConfig(block);
   const pageSize = parseInt(config.pagesize, 10) || 9;
 
-  const fragment = document.createRange().createContextualFragment(`
+  const fragment = document.createRange()
+    .createContextualFragment(`
     <div class="search__wrapper">
       <div class="search__result-info"></div>
       <div class="search__view-facets"></div>
@@ -113,7 +114,10 @@ export default async function decorate(block) {
     UI.render(Button, {
       children: labels.Global?.AddProductToCart,
       icon: Icon({ source: 'Cart' }),
-      onClick: () => cartApi.addProductsToCart([{ sku: product.sku, quantity: 1 }]),
+      onClick: () => cartApi.addProductsToCart([{
+        sku: product.sku,
+        quantity: 1,
+      }]),
       variant: 'primary',
       disabled: !product.inStock,
     })(button);
@@ -128,7 +132,10 @@ export default async function decorate(block) {
     provider.render(Pagination, {
       onPageChange: () => {
         // scroll to the top of the page
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
       },
     })($pagination),
 
@@ -149,7 +156,10 @@ export default async function decorate(block) {
       routeProduct: (product) => getProductLink(product.urlKey, product.sku),
       slots: {
         ProductImage: (ctx) => {
-          const { product, defaultImageProps } = ctx;
+          const {
+            product,
+            defaultImageProps,
+          } = ctx;
           const anchorWrapper = document.createElement('a');
           anchorWrapper.href = getProductLink(product.urlKey, product.sku);
 
@@ -163,7 +173,7 @@ export default async function decorate(block) {
             },
           });
         },
-        ProductActions: (ctx) => {
+        ProductActions: async (ctx) => {
           const actionsWrapper = document.createElement('div');
           actionsWrapper.className = 'product-discovery-product-actions';
           // Add to Cart Button
@@ -178,6 +188,21 @@ export default async function decorate(block) {
           })($wishlistToggle);
           actionsWrapper.appendChild(addToCartBtn);
           actionsWrapper.appendChild($wishlistToggle);
+
+          // Conditionally load and render Requisition List Button
+          try {
+            const { initializeRequisitionList } = await import('./requisition-list.js');
+
+            const $reqListContainer = await initializeRequisitionList({
+              product: ctx.product,
+              labels,
+            });
+
+            actionsWrapper.appendChild($reqListContainer);
+          } catch (error) {
+            console.warn('Requisition list module not available:', error);
+          }
+
           ctx.replaceWith(actionsWrapper);
         },
       },
@@ -197,9 +222,11 @@ export default async function decorate(block) {
 
     // Update the view facets button with the number of filters
     if (payload.request.filter.length > 0) {
-      $viewFacets.querySelector('button').setAttribute('data-count', payload.request.filter.length);
+      $viewFacets.querySelector('button')
+        .setAttribute('data-count', payload.request.filter.length);
     } else {
-      $viewFacets.querySelector('button').removeAttribute('data-count');
+      $viewFacets.querySelector('button')
+        .removeAttribute('data-count');
     }
   }, { eager: true });
 
