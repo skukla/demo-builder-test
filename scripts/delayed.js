@@ -114,7 +114,6 @@ try {
   const TEXT = 'font:var(--type-body-1-default-font,1.25rem/1.5 sans-serif);color:var(--color-brand-500,#454545);';
   const ANIM = '<style>@keyframes smart404Spin{to{transform:rotate(360deg)}}</style>';
   const LOADING_HTML = `<div style="${WRAP}"><div style="${SPIN}"></div><div style="${TEXT}">Loading product…</div></div>${ANIM}`;
-  const ERROR_HTML = `<div style="${WRAP}"><div style="${TEXT}">Product not available.</div></div>`;
   if (mainEl) {
     mainEl.className = '';
     mainEl.innerHTML = LOADING_HTML;
@@ -150,9 +149,13 @@ try {
       window.location.replace(`${lc}${sep}${RETRY_FLAG}=1`);
       return;
     }
-    // Action failed after retry. Surface the failure to the user
-    // instead of leaving "Loading product…" hanging forever.
-    if (mainEl) mainEl.innerHTML = ERROR_HTML;
+    // Action failed after retry — the SKU has no publishable PDP
+    // (deleted, renamed, or never existed in Commerce). The honest UX
+    // is the storefront's native /404, not a custom in-place message
+    // that implies the product page exists. A full redirect makes the
+    // URL bar, history, and bookmarks all reflect reality. /404 does not
+    // match the PDP pattern, so this never loops.
+    window.location.replace('/404');
   })();
 }());
 // === end Smart 404 PDP rebuild ===
