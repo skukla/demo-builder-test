@@ -6,13 +6,13 @@
       "commerce-assets-enabled": true,
       "headers": {
         "all": {
-          "Store": "citisignal_us"
+          "Store": "bodea_us"
         },
         "cs": {
           "Magento-Customer-Group": "",
-          "Magento-Store-Code": "citisignal_store",
-          "Magento-Store-View-Code": "citisignal_us",
-          "Magento-Website-Code": "citisignal"
+          "Magento-Store-Code": "bodea_store",
+          "Magento-Store-View-Code": "bodea_us",
+          "Magento-Website-Code": "bodea"
         }
       },
       "analytics": {
